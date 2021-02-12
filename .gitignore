@@ -1,0 +1,6 @@
+build/
+.cache/
+CS_SESSION
+.tasks
+compile_commands.json
+.vimspector.json
