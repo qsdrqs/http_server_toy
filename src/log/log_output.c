@@ -20,9 +20,10 @@
 
 FILE* log_file;
 
-int InitLogFile()
+// TODO :use struct to decouple
+
+int InitLogFile(char* log_root_path)
 {
-    char log_root_path[256] = "./var/log/http_toy";
     int len = strlen(log_root_path);
     // check length
     if (len > 245) {
@@ -45,6 +46,10 @@ int InitLogFile()
     while (strcmp(dir_path, "") != 0) {
         if (stat(dir_path, &st) == -1) {
             char* index = strrchr(dir_path, '/');
+            if (index == 0) { // relative path
+                dirstack[i] = index;
+                break;
+            }
             *index = '\0';
             dirstack[i] = index + 1;
             i++;

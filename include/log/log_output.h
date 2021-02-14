@@ -13,7 +13,7 @@
 
 extern FILE* log_file;
 // open a log file
-int InitLogFile();
+int InitLogFile(char* log_root_path);
 // main method
 void Logging(unsigned short is_access, char* resource_path, unsigned short return_code, unsigned short method, unsigned short log_mode);
 // close log file

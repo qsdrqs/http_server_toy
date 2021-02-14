@@ -10,7 +10,7 @@
 
 #include "global.h"
 
-char METHOD[5][10]={
+char METHOD[5][10] = {
     "GET",
     "POST",
     "PUT"

@@ -9,22 +9,25 @@
  */
 
 extern "C" {
+#include "global.h"
 #include "log/log_output.h"
 #include <stdio.h>
-#include "global.h"
 }
 
 #include <gtest/gtest.h>
-class TestLog : public ::testing::Test {
+class TestLog : public ::testing::Test
+{
 protected:
     TestLog()
     {
-        InitLogFile();
+        char log_root_path[256] = "var/log/http.log";
+        InitLogFile(log_root_path);
     }
 
     ~TestLog() override
     {
-        EndLogFile();
+        if (log_file != 0)
+            EndLogFile();
     }
 };
 
@@ -43,4 +46,22 @@ TEST_F(TestLog, test_all)
 {
     ASSERT_NE(log_file, nullptr);
     Logging(true, "abc/def/ghi.html", 500, GET, ALL);
+}
+
+//test path
+TEST(TestLogPath, test_path_1)
+{
+    char log_root_path[256] = "/var/log/http.log";
+    /* should cause permission denied */
+    ASSERT_NE(InitLogFile(log_root_path), 0);
+}
+TEST(TestLogPath, test_path_2)
+{
+    char log_root_path[256] = "///////////";
+    ASSERT_NE(InitLogFile(log_root_path), 0);
+}
+TEST(TestLogPath, test_path_3)
+{
+    char log_root_path[256] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    ASSERT_NE(InitLogFile(log_root_path), 0);
 }
