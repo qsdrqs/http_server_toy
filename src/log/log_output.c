@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <time.h>
 
 FILE* log_file;
@@ -84,7 +85,7 @@ char* get_time()
     return format_time;
 }
 
-void LogIntoFile(unsigned short is_access, char* resource_path, unsigned short return_code, unsigned short method, char* time)
+void LogIntoFile(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, char* time)
 {
     if (is_access) {
         fprintf(log_file, "ACCESS");
@@ -101,7 +102,7 @@ void LogIntoFile(unsigned short is_access, char* resource_path, unsigned short r
     fprintf(log_file, "%d\n", return_code);
 }
 
-void LogOnConsole(unsigned short is_access, char* resource_path, unsigned short return_code, unsigned short method, char* time)
+void LogOnConsole(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, char* time)
 {
     if (is_access) {
         printf("ACCESS");
@@ -118,7 +119,7 @@ void LogOnConsole(unsigned short is_access, char* resource_path, unsigned short 
     printf("%d\n", return_code);
 }
 
-void Logging(unsigned short is_access, char* resource_path, unsigned short return_code, unsigned short method, unsigned short log_mode)
+void Logging(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, u_int8_t log_mode)
 {
     char* time = get_time();
     if (log_mode == CONSOLE_ONLY) {
