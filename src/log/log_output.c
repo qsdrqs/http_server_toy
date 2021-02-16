@@ -23,7 +23,7 @@ FILE* log_file;
 
 // TODO :use struct to decouple
 
-int InitLogFile(char* log_root_path)
+int init_log_file(char* log_root_path)
 {
     int len = strlen(log_root_path);
     // check length
@@ -48,7 +48,8 @@ int InitLogFile(char* log_root_path)
         if (stat(dir_path, &st) == -1) {
             char* index = strrchr(dir_path, '/');
             if (index == 0) { // relative path
-                dirstack[i] = index;
+                dirstack[i] = dir_path;
+                i++;
                 break;
             }
             *index = '\0';
@@ -85,7 +86,7 @@ char* get_time()
     return format_time;
 }
 
-void LogIntoFile(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, char* time)
+void log_into_file(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, char* time)
 {
     if (is_access) {
         fprintf(log_file, "ACCESS");
@@ -102,7 +103,7 @@ void LogIntoFile(u_int8_t is_access, char* resource_path, u_int16_t return_code,
     fprintf(log_file, "%d\n", return_code);
 }
 
-void LogOnConsole(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, char* time)
+void log_on_console(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, char* time)
 {
     if (is_access) {
         printf("ACCESS");
@@ -119,21 +120,21 @@ void LogOnConsole(u_int8_t is_access, char* resource_path, u_int16_t return_code
     printf("%d\n", return_code);
 }
 
-void Logging(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, u_int8_t log_mode)
+void logging(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, u_int8_t log_mode)
 {
     char* time = get_time();
     if (log_mode == CONSOLE_ONLY) {
-        LogOnConsole(is_access, resource_path, return_code, method, time);
+        log_on_console(is_access, resource_path, return_code, method, time);
     } else if (log_mode == FILE_ONLY) {
-        LogIntoFile(is_access, resource_path, return_code, method, time);
+        log_into_file(is_access, resource_path, return_code, method, time);
     } else {
-        LogOnConsole(is_access, resource_path, return_code, method, time);
-        LogIntoFile(is_access, resource_path, return_code, method, time);
+        log_on_console(is_access, resource_path, return_code, method, time);
+        log_into_file(is_access, resource_path, return_code, method, time);
     }
     free(time);
 }
 
-int EndLogFile()
+int end_log_file()
 {
     return fclose(log_file);
 }

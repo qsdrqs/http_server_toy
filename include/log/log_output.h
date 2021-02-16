@@ -14,10 +14,10 @@
 
 extern FILE* log_file;
 // open a log file
-int InitLogFile(char* log_root_path);
+int init_log_file(char* log_root_path);
 // main method
-void Logging(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, u_int8_t log_mode);
+void logging(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, u_int8_t log_mode);
 // close log file
-int EndLogFile();
+int end_log_file();
 
 #endif

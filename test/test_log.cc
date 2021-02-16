@@ -21,31 +21,31 @@ protected:
     TestLog()
     {
         char log_root_path[256] = "var/log/http.log";
-        InitLogFile(log_root_path);
+        init_log_file(log_root_path);
     }
 
     ~TestLog() override
     {
         if (log_file != 0)
-            EndLogFile();
+            end_log_file();
     }
 };
 
 TEST_F(TestLog, test_console)
 {
-    Logging(true, "abc/def/ghi.html", 500, GET, CONSOLE_ONLY);
+    logging(true, "abc/def/ghi.html", 500, GET, CONSOLE_ONLY);
 }
 
 TEST_F(TestLog, test_file)
 {
     ASSERT_NE(log_file, nullptr);
-    Logging(true, "abc/def/ghi.html", 500, GET, FILE_ONLY);
+    logging(true, "abc/def/ghi.html", 500, GET, FILE_ONLY);
 }
 
 TEST_F(TestLog, test_all)
 {
     ASSERT_NE(log_file, nullptr);
-    Logging(true, "abc/def/ghi.html", 500, GET, ALL);
+    logging(true, "abc/def/ghi.html", 500, GET, ALL);
 }
 
 //test path
@@ -53,15 +53,15 @@ TEST(TestLogPath, test_path_1)
 {
     char log_root_path[256] = "/var/log/http.log";
     /* should cause permission denied */
-    ASSERT_NE(InitLogFile(log_root_path), 0);
+    ASSERT_NE(init_log_file(log_root_path), 0);
 }
 TEST(TestLogPath, test_path_2)
 {
     char log_root_path[256] = "///////////";
-    ASSERT_NE(InitLogFile(log_root_path), 0);
+    ASSERT_NE(init_log_file(log_root_path), 0);
 }
 TEST(TestLogPath, test_path_3)
 {
     char log_root_path[256] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    ASSERT_NE(InitLogFile(log_root_path), 0);
+    ASSERT_NE(init_log_file(log_root_path), 0);
 }
