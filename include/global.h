@@ -34,4 +34,6 @@ enum LOG_MOD {
     ALL
 };
 
+/* static vars */
+
 #endif
