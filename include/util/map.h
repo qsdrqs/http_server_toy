@@ -22,7 +22,13 @@ typedef struct Map {
 
 Map* init_map();
 
+/*
+ * if key has exist, the new value will cover the old one
+ */
 int add_key_value(char* key, char* value, Map* map);
+
 int find(char* key, Map* map, char* result);
+
+void free_map(Map* map);
 
 #endif

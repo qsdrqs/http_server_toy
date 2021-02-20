@@ -78,3 +78,10 @@ int find(char* key, Map* map, char* result)
     }
     return -1;
 }
+
+void free_map(Map *map)
+{
+    free(map->keys);
+    free(map->values);
+    free(map);
+}

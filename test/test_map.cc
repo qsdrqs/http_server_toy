@@ -1,5 +1,5 @@
 /*
- * test_map.cc: tests for string map functions
+ * test/test_map.cc: tests for string map functions
  *
  * Copyright (C) 2021 qsdrqs
  *
@@ -25,9 +25,7 @@ protected:
     }
     ~TestMap() override
     {
-        free(this->map->keys);
-        free(this->map->values);
-        free(this->map);
+        free_map(this->map);
     }
 };
 
