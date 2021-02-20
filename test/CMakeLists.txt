@@ -1,7 +1,5 @@
-aux_source_directory(. test_register)
-add_executable(tests ${test_register})
-target_link_libraries(tests gtest gtest_main APIS)
-add_test(
-    NAME test_register
-    COMMAND test_register
-)
+add_executable(test_log test_log.cc)
+target_link_libraries(test_log gtest gtest_main APIS)
+
+add_executable(test_map test_map.cc)
+target_link_libraries(test_map gtest gtest_main APIS)

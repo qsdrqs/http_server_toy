@@ -1,7 +1,7 @@
 /*
  * src/log/log_output.c: provide unified log output through command line and file
  *
- * log format: ACCESS/DENY [XXXX-XX-XX XX:XX:XX] METHOD RESOURCE RETURN_CODE
+ * log format: ACCESS/DENY IP [XXXX-XX-XX XX:XX:XX] METHOD RESOURCE RETURN_CODE
  *
  * Copyright (C) 2021 qsdrqs
  *
@@ -27,7 +27,7 @@ int init_log_file(char* log_root_path)
 {
     int len = strlen(log_root_path);
     // check length
-    if (len > 245) {
+    if (len > MAXLENGTH - 11) {
         puts("log directory path is too long!");
         return -1;
     }
@@ -37,10 +37,10 @@ int init_log_file(char* log_root_path)
         len++;
     }
     /* create dir if not exist */
-    char dir_path[256];
-    memset(dir_path, 0, 256);
+    char dir_path[MAXLENGTH];
+    memset(dir_path, 0, MAXLENGTH);
     strncpy(dir_path, log_root_path, strlen(log_root_path) - 1); // copy except last '/'
-    char* dirstack[256];
+    char* dirstack[MAXLENGTH];
     struct stat st = { 0 };
     int i = 0;
     // push stack
@@ -60,7 +60,7 @@ int init_log_file(char* log_root_path)
         }
     }
     // pop stack
-    char buf[256];
+    char buf[MAXLENGTH];
     for (int j = i - 1; j >= 0; --j) {
         if (mkdir(strcat(buf, dirstack[j]), 0755)) {
             puts("fail making log directorys!");
@@ -120,6 +120,7 @@ void log_on_console(u_int8_t is_access, char* resource_path, u_int16_t return_co
     printf("%d\n", return_code);
 }
 
+//TODO: IP
 void logging(u_int8_t is_access, char* resource_path, u_int16_t return_code, u_int8_t method, u_int8_t log_mode)
 {
     char* time = get_time();
