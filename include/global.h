@@ -35,5 +35,6 @@ enum LOG_MOD {
 };
 
 /* static vars */
+#define MAXLENGTH 256
 
 #endif
