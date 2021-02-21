@@ -18,6 +18,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <unistd.h>
 
 FILE* log_file;
 
@@ -26,11 +27,25 @@ FILE* log_file;
 int init_log_file(char* log_root_path)
 {
     int len = strlen(log_root_path);
+    if (log_root_path[0] != '/') {
+        // relative path, get cwd
+        char base_dir[MAXLENGTH];
+        memset(base_dir, 0, MAXLENGTH);
+        getcwd(base_dir, MAXLENGTH);
+        // check length
+        if (strlen(base_dir) + strlen(log_root_path) + 9 > MAXLENGTH) {
+            puts("log directory path is too long!");
+            return -1;
+        }
+        strcat(base_dir, "/");
+        log_root_path = strcat(base_dir, log_root_path);
+    }
     // check length
-    if (len > MAXLENGTH - 11) {
+    else if (strlen(log_root_path) + 9 > MAXLENGTH) {
         puts("log directory path is too long!");
         return -1;
     }
+
     // check last '/'
     if (log_root_path[len - 1] != '/') {
         strcat(log_root_path, "/");
@@ -41,17 +56,13 @@ int init_log_file(char* log_root_path)
     memset(dir_path, 0, MAXLENGTH);
     strncpy(dir_path, log_root_path, strlen(log_root_path) - 1); // copy except last '/'
     char* dirstack[MAXLENGTH];
+    memset(dirstack, 0, MAXLENGTH * sizeof(char*));
     struct stat st = { 0 };
     int i = 0;
     // push stack
     while (strcmp(dir_path, "") != 0) {
         if (stat(dir_path, &st) == -1) {
             char* index = strrchr(dir_path, '/');
-            if (index == 0) { // relative path
-                dirstack[i] = dir_path;
-                i++;
-                break;
-            }
             *index = '\0';
             dirstack[i] = index + 1;
             i++;
@@ -59,11 +70,16 @@ int init_log_file(char* log_root_path)
             break;
         }
     }
+
     // pop stack
     char buf[MAXLENGTH];
+    memset(buf, 0, MAXLENGTH);
+    // copy exist directory
+    strcpy(buf, dir_path);
+    strcat(buf, "/");
     for (int j = i - 1; j >= 0; --j) {
-        if (mkdir(strcat(buf, dirstack[j]), 0755)) {
-            puts("fail making log directorys!");
+        if (mkdir(strcat(buf, dirstack[j]), 0751)) {
+            puts("fail making log directories!");
             return -1;
         }
         strcat(buf, "/");
